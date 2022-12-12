@@ -5,8 +5,6 @@ if message.isdigit():
         print(f'Number {message} is even')
     else:
         print(f'Number {message} is odd')
-elif message.isalpha():
-    print('This is a word')
-    print(f'The length of the {message} is {len(message)} letters')
 else:
-    print('Input includes some other symbols')
+    print('This is a word')
+    print(f'The length of the {message} is {len(message)} symbols')
