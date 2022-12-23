@@ -5,9 +5,12 @@ while True:
         print(f'Number of records is {len(phone_book.keys())}')
     elif command == 'add':
         name = input('Enter a name: ')
-        phone_number = input('Enter a phone number: ')
-        print(f'{name} is added to a phone book')
-        phone_book[name] = phone_number
+        if name in phone_book.keys():
+            print(f'{name} is already in a phone book')
+        else:
+            phone_number = input('Enter a phone number: ')
+            print(f'{name} is added to a phone book')
+            phone_book[name] = phone_number
     elif command == 'delete':
         name = input('Enter a name: ')
         if name in phone_book.keys():
