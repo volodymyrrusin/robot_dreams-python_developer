@@ -45,18 +45,14 @@ def my_func2(n):
 
 # TASK 3: Program for printing number in Fibonacci sequence using recursion
 
-def fib_rec(n, lst):
-    a = lst[-2]
-    b = lst[-1]
-    if len(lst) < n + 1:
-        lst = lst + [a + b]
-        return fib_rec(n, lst)
+def fib_rec(n):
+    if n <= 1:
+        return n
     else:
-        return lst
+        return fib_rec(n-1) + fib_rec(n-2)
 
 def my_func3(n):
-    fib_lst = fib_rec(n, [0, 1])
-    print(fib_lst[n])
+    print(fib_rec(n))
 
 
 # TASK 4: Program for returning factorial of the number using recursion
