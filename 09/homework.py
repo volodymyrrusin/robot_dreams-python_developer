@@ -14,6 +14,10 @@ def my_func1(n):
             print(item)
         x += 1
 
+try:
+    my_func1(8)
+except Exception as e:
+    print(e)
 
 # TASK 2: Program for printing number in Fibonacci sequence using iterators
 
@@ -42,6 +46,10 @@ def my_func2(n):
             print(item)
         x += 1
 
+try:
+    my_func2(8)
+except Exception as e:
+    print(e)
 
 # TASK 3: Program for printing number in Fibonacci sequence using recursion
 
@@ -54,6 +62,10 @@ def fib_rec(n):
 def my_func3(n):
     print(fib_rec(n))
 
+try:
+    my_func3(8)
+except Exception as e:
+    print(e)
 
 # TASK 4: Program for returning factorial of the number using recursion
 def fact_rec(n):
@@ -61,3 +73,8 @@ def fact_rec(n):
         return n * fact_rec(n - 1)
     else:
         return 1
+
+try:
+    fact_rec(8)
+except Exception as e:
+    print(e)
