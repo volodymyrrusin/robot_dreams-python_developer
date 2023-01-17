@@ -5,7 +5,8 @@ from datetime import datetime
 def my_decorator(func):
     def inner(*args, **kwargs):
         print(f'Function name is {func.__name__}, time of execution is {datetime.now()}')
-        func(*args, **kwargs)
+        result = func(*args, **kwargs)
+        return result
     return inner
 
 
@@ -26,6 +27,7 @@ class MyContextManager:
         if exc_value:
             print(exc_value)
         print('==========')
+        return True
 
 
 try:
