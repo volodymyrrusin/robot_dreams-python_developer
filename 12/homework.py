@@ -6,13 +6,8 @@ import json
 def my_decorator(func):
     def inner(*args, **kwargs):
         text = f'Function name is {func.__name__}, time of execution is {datetime.now()}\n'
-        try:
-            with open('my_deco.txt'):
-                with open('my_deco.txt', 'a') as file:
-                    file.write(text)
-        except IOError:
-            with open('my_deco.txt', 'a') as file:
-                file.write(text)
+        with open('my_deco.txt', 'a') as file:
+            file.write(text)
         result = func(*args, **kwargs)
         return result
     return inner
@@ -22,23 +17,17 @@ def my_decorator(func):
 class MyCustomException(Exception):
     def __init__(self, message='Custom exception is occurred'):
         text = f'{message}, date of occurrence is {datetime.now()}\n'
-        try:
-            with open('my_exception.txt'):
-                with open('my_exception.txt', 'a') as file:
-                    file.write(text)
-        except IOError:
-            with open('my_exception.txt', 'w') as file:
-                file.write(text)
+        with open('my_exception.txt', 'a') as file:
+            file.write(text)
         super().__init__(message)
 
 
 # TASK 1: Create saving phone book into a json file
 try:
-    with open('phone_book.json'):
-        with open('phone_book.json') as json_file:
-            phone_book = json.load(json_file)
+    with open('phone_book.json') as json_file:
+        phone_book = json.load(json_file)
 except IOError:
-    phone_book = {}
+        phone_book = {}
 finally:
     while True:
         command = input('Enter a command: ')
