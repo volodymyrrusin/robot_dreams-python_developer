@@ -82,7 +82,7 @@ def login():
         """
         return html_form, 200
     elif request.method == 'POST':
-        if request.form:
+        if request.form['username'] and request.form['password']:
             return redirect('/users')
         else:
             return 'No information', 400
