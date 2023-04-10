@@ -1,8 +1,9 @@
 import werkzeug.exceptions
 import random
 from robot_app import app
-from flask import request, redirect
+from flask import request, redirect, render_template, session, url_for
 
+app.secret_key = b'some_secret_key'
 
 @app.route('/hello')
 def hello():
@@ -17,73 +18,76 @@ def get_users():
         users_count = int(request.args.get('count'))
         users_result = [random.choice(users_list) for _ in range(users_count)]
     else:
-        users_result = [random.choice(users_list) for _ in range(random.randrange(100))]
-    return f'List of users: {users_result}', 200
+        users_count = random.randrange(100)
+        users_result = [random.choice(users_list) for _ in range(users_count)]
+    username = session.get('user')
+    if username:
+        return render_template('users.html', users=users_result, username=username)
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/books')
 def get_books():
     books_list = ['Kobzar', 'Harry Potter', 'The Witcher']
-    books_html = """
-    <div>List of books:</div>
-    <ul>
-    """
     if request.args.get('count'):
         books_count = int(request.args.get('count'))
-        for _ in range(books_count):
-            books_html += f'<li>{random.choice(books_list)}'
+        random_book = [random.choice(books_list) for _ in range(books_count)]
     else:
-        for _ in range(random.randrange(100)):
-            books_html += f'<li>{random.choice(books_list)}'
-    books_html += '</ul>'
-    return books_html, 200
+        books_count = random.randrange(100)
+        random_book = [random.choice(books_list) for _ in range(books_count)]
+    username = session.get('user')
+    context = {
+        'books_count': books_count,
+        'random_book': random_book,
+        'username': username
+    }
+    if username:
+        return render_template('books.html', **context)
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/users/<int:user_id>')
 def get_user(user_id):
     if user_id % 2 == 0:
-        return f'{user_id}', 200
+        username = session.get('user')
+        if username:
+            return render_template('user_id.html', user_id=user_id, username=username)
+        else:
+            return redirect(url_for('login'))
     else:
         return '', 404
 
 
 @app.route('/books/<string:book_title>')
 def get_book(book_title):
-    return f'{book_title.title()}', 200
+    book_title = book_title.title()
+    username = session.get('user')
+    if username:
+        return render_template('book_title.html', book_title=book_title, username=username)
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/params')
 def params_query():
-    params_table = ('<table>'
-                    '<thead>'
-                    '<tr>'
-                    '<th>parameter</th>'
-                    '<th>value</th>'
-                    '</tr>'
-                    '</thead>')
-    for key, value in request.args.items():
-        params_table += ('<tr>'
-                         f'<th>{key}</th>'
-                         f'<th>{value}</th>'
-                         '</tr>')
-    params_table += '</table>'
-    return params_table, 200
+    username = session.get('user')
+    if username:
+        return render_template('params.html', attributes=request.args, username=username)
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        html_form = """
-        <form method=POST action='/login'>
-            <input type='string' name='username' value='' minlength='5'/>
-            <input type='password' name='password' value='' minlength='8' pattern='^(.*[A-Z])(.*[0-9]).*$'/>
-            <button type='submit'>Submit</button>
-        </form>        
-        """
-        return html_form, 200
+        return render_template('login.html')
     elif request.method == 'POST':
-        if request.form.get('username') and request.form.get('password'):
-            return redirect('/users')
+        if request.form['username'] and request.form['password']:
+            username = request.form.get('username')
+            session['user'] = username
+            return redirect(url_for('get_users'))
         else:
             return 'No information', 400
     else:
@@ -102,12 +106,10 @@ def default_500(e):
 
 @app.get('/')
 def get_handler():
-    html_code = """
-    <div><a href="http://127.0.0.1:5000/login">Login</a></div>
-    <div><a href="http://127.0.0.1:5000/users">Users</a></div>
-    <div><a href="http://127.0.0.1:5000/books">Books</a></div>
-    <div><a href="http://127.0.0.1:5000/params">Params</a></div>
-    """
-    return html_code, 200
+    return render_template('main_page.html')
 
 
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
