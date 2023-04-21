@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    <title>Params</title>
+</head>
+<body>
+    <div>Hello, {{ username }}</div>
+    <table>
+        <thead>
+            <tr>
+                <th>parameter</th>
+                <th>value</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for key, value in attributes.items() %}
+            <tr>
+                <th>{{key}}</th>
+                <th>{{value}}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button onclick="location.href='/logout'" type="button">Logout</button>
+</body>
+</html>

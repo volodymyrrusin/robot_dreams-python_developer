@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    <title>Books</title>
+</head>
+<body>
+    <div>Hello, {{ username }}</div>
+    <div>List of books:</div>
+        <ul>
+            {% for i in range(books_count) %}
+                <li>{{random_book[i]}}</li>
+            {% endfor %}
+        </ul>
+    <button onclick="location.href='/logout'" type="button">Logout</button>
+</body>
+</html>

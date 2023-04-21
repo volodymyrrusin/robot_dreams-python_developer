@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    <title>User_id</title>
+</head>
+<body>
+    <div>Hello, {{ username }}</div>
+    <div>{{ user_id }}</div>
+    <button onclick="location.href='/logout'" type="button">Logout</button>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    <title>Login</title>
+</head>
+<body>
+    <form method=POST action='/login'>
+        <input type='string' name='username' value='' minlength='5' placeholder="Username"/>
+        <input type='password' name='password' value='' minlength='8' pattern='^(.*[A-Z])(.*[0-9]).*$' placeholder="Password"/>
+        <button type='submit'>Submit</button>
+    </form>
+</body>
+</html>
