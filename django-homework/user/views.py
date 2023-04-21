@@ -1,4 +1,7 @@
-from django.http import HttpResponse
+from django.http import JsonResponse
+from .models import User
+
 
 def my_view(request):
-    return HttpResponse('Hello, users!')
+    users = list(User.objects.all().values())
+    return JsonResponse(users, safe=False)
