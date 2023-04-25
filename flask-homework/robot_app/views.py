@@ -1,9 +1,10 @@
 import werkzeug.exceptions
-import random
-from robot_app import app
+from robot_app import app, db
 from flask import request, redirect, render_template, session, url_for
+from .models import *
 
 app.secret_key = b'some_secret_key'
+
 
 @app.route('/hello')
 def hello():
@@ -13,59 +14,75 @@ def hello():
 
 @app.route('/users')
 def get_users():
-    users_list = ['Taras', 'Joanne', 'Andrzej']
-    if request.args.get('count'):
-        users_count = int(request.args.get('count'))
-        users_result = [random.choice(users_list) for _ in range(users_count)]
+    size = request.args.get('size')
+    if size:
+        query = db.Select(User).limit(size)
+        users = db.session.scalars(query)
     else:
-        users_count = random.randrange(100)
-        users_result = [random.choice(users_list) for _ in range(users_count)]
+        users = User.query.all()
     username = session.get('user')
     if username:
-        return render_template('users.html', users=users_result, username=username)
+        return render_template('users.html', users=users, username=username)
     else:
         return redirect(url_for('login'))
 
 
 @app.route('/books')
 def get_books():
-    books_list = ['Kobzar', 'Harry Potter', 'The Witcher']
-    if request.args.get('count'):
-        books_count = int(request.args.get('count'))
-        random_book = [random.choice(books_list) for _ in range(books_count)]
+    size = request.args.get('size')
+    if size:
+        query = db.Select(Book).limit(size)
+        books = db.session.scalars(query)
     else:
-        books_count = random.randrange(100)
-        random_book = [random.choice(books_list) for _ in range(books_count)]
+        books = Book.query.all()
     username = session.get('user')
-    context = {
-        'books_count': books_count,
-        'random_book': random_book,
-        'username': username
-    }
     if username:
-        return render_template('books.html', **context)
+        return render_template('books.html', books=books, username=username)
     else:
         return redirect(url_for('login'))
 
 
 @app.route('/users/<int:user_id>')
 def get_user(user_id):
-    if user_id % 2 == 0:
-        username = session.get('user')
-        if username:
-            return render_template('user_id.html', user_id=user_id, username=username)
-        else:
-            return redirect(url_for('login'))
-    else:
-        return '', 404
-
-
-@app.route('/books/<string:book_title>')
-def get_book(book_title):
-    book_title = book_title.title()
+    user = db.get_or_404(User, user_id)
     username = session.get('user')
     if username:
-        return render_template('book_title.html', book_title=book_title, username=username)
+        return render_template('user_id.html', user=user, username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/books/<string:book_id>')
+def get_book(book_id):
+    book = db.get_or_404(Book, book_id)
+    username = session.get('user')
+    if username:
+        return render_template('book_id.html', book=book, username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/purchases')
+def get_purchases():
+    size = request.args.get('size')
+    if size:
+        query = db.Select(Purchase).limit(size)
+        purchases = db.session.scalars(query)
+    else:
+        purchases = Purchase.query.all()
+    username = session.get('user')
+    if username:
+        return render_template('purchases.html', purchases=purchases, username=username)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/purchases/<int:purchase_id>')
+def get_purchase(purchase_id):
+    purchase = db.get_or_404(Purchase, purchase_id)
+    username = session.get('user')
+    if username:
+        return render_template('purchase_id.html', purchase=purchase, username=username)
     else:
         return redirect(url_for('login'))
 
@@ -113,3 +130,44 @@ def get_handler():
 def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
+
+
+@app.route('/users', methods=['POST', ])
+def create_users():
+    user = User(
+        first_name=request.form.get('first_name'),
+        last_name=request.form.get('last_name'),
+        age=request.form.get('age')
+    )
+    db.session.add(user)
+    db.session.commit()
+    return 'User created', 201
+
+
+@app.route('/books', methods=['POST', ])
+def create_books():
+    book = Book(
+        title=request.form.get('title'),
+        author=request.form.get('author'),
+        year=request.form.get('year'),
+        price=request.form.get('price')
+    )
+    db.session.add(book)
+    db.session.commit()
+    return 'Book created', 201
+
+
+@app.route('/purchases', methods=['POST', ])
+def create_purchases():
+    user_id = request.form.get('user_id')
+    user = db.get_or_404(User, user_id)
+    book_id = request.form.get('book_id')
+    book = db.get_or_404(Book, book_id)
+    purchase = Purchase(
+        user_id=user.id,
+        book_id=book.id,
+        date=request.form.get('date')
+    )
+    db.session.add(purchase)
+    db.session.commit()
+    return 'Purchase created', 201
