@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
-    <title>Books</title>
+    <title>Purchases</title>
 </head>
 <body>
     <div>Hello, {{ username }}</div>
-    <div>List of books:</div>
-        <ul>
-            {% for book in books %}
-                <li>id: {{ book.id }}, title: {{ book.title }}, author: {{ book.author }}, year: {{ book.year }}, price: {{ book.price }}</li>
-            {% endfor %}
-        </ul>
+    <div>id: {{ purchase.id }}, user id: {{ purchase.user_id }}, book id: {{ purchase.book_id }}, date: {{ purchase.date }}, user first name: {{ purchase.user.first_name }}, book title: {{ purchase.book.title }}</div>
     <button onclick="location.href='/logout'" type="button">Logout</button>
 </body>
 </html>

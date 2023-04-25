@@ -7,7 +7,13 @@
 </head>
 <body>
     <div>Hello, {{ username }}</div>
-    <div>List of users: {{ users }}</div>
+    <div>List of users:
+        <ul>
+            {% for user in users %}
+                <li>id: {{ user.id }}, first name: {{ user.first_name }}, last name: {{ user.last_name }}, age: {{ user.age }}</li>
+            {% endfor %}
+        </ul>
+    </div>
     <button onclick="location.href='/logout'" type="button">Logout</button>
 </body>
 </html>
