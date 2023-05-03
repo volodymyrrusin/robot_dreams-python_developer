@@ -1,7 +1,16 @@
-from django.http import JsonResponse
-from .models import User
+from django.views.generic import ListView, DetailView, CreateView
+from user.models import User
+from user.forms import UserForm
 
 
-def my_view(request):
-    users = list(User.objects.all().values())
-    return JsonResponse(users, safe=False)
+class UserListView(ListView):
+    model = User
+
+
+class UserDetailView(DetailView):
+    model = User
+
+
+class UserCreateView(CreateView):
+    model = User
+    form_class = UserForm

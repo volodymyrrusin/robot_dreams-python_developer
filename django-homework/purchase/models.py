@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Purchase(models.Model):
@@ -12,3 +13,6 @@ class Purchase(models.Model):
 
     def __str__(self):
         return f'{self.id}: {self.user.first_name} {self.book.title}'
+
+    def get_absolute_url(self):
+        return reverse('purchase-detail', args=[self.id])
