@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user.apps.UserConfig',
     'book.apps.BookConfig',
-    'purchase.apps.PurchaseConfig'
+    'purchase.apps.PurchaseConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'robot.wsgi.application'
 
+# REST Framework
+
+REST_FRAMEWORK = {
+    'PAGE_SIZE': 10,
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
