@@ -81,7 +81,9 @@ WSGI_APPLICATION = 'robot.wsgi.application'
 # REST Framework
 
 REST_FRAMEWORK = {
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 5,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_FILTER_BACKEND': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 # Database
