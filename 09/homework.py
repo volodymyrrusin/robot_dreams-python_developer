@@ -1,3 +1,7 @@
+import random
+import math
+import unittest
+
 # TASK 1: Program for printing number in Fibonacci sequence using generators
 
 def fib(num):
@@ -78,3 +82,22 @@ try:
     fact_rec(8)
 except Exception as e:
     print(e)
+
+
+class MyTestClass(unittest.TestCase):
+    def test_fact_rec_negative(self):
+        random_negative_number = random.randint(-100000, 0)
+        self.assertEqual(fact_rec(random_negative_number), 1)
+
+    def test_fact_rec(self):
+        random_number = random.randint(0, 1000)
+        f = math.factorial(random_number)
+        self.assertEqual(fact_rec(random_number), f)
+
+    def test_incorrect_values(self):
+        with self.assertRaises(TypeError):
+            fact_rec('')
+
+
+if __name__ == '__main__':
+    unittest.main()
